@@ -20,19 +20,21 @@ main:   # Words ending with ':' are **labels**
         # Instruction operands are indented a few spaces, so that the
         #    instruction type is more visible.
       
-        la         $a0, mesg1        # get address of mesg1 into $a0
+        la         $a0, matric      # get address of mesg1 into $a0
         # la is a pseudo-instruction. Notice that is gets converted to 2
         #   instructions after assemblying.
         #   Ignore this detail for now. We'll get back to this later
-        addiu      $v0, $zero, 4     # system service 4: print string
-        syscall                      #   located at address $a0
+        lw 	   $a0, 0($a0)     #dereference into a0
+        add	   $v0, $zero, $a0
+        #addiu      $v0, $zero,1    # system service 1: print integer
+       
+        #syscall                      #   located at address $a0
         # This is a system call. We call the operating system
         #   to display a string for us. Think of it as a special
         #   subroutine.
         
-        addiu      $v0, $zero, 5     # system service 5: read integer
-        syscall                      # integer returned in $v0
-        
+	#addiu      $v0, $zero, 5     # system service 5: read integer
+        ##syscall                      # integer returned in $v0
         add        $s1, $zero, $v0   # $s1 = (read value)
                                      # Note: this just moves the value to
                                      #   a different register
@@ -56,8 +58,7 @@ main:   # Words ending with ':' are **labels**
                                      #  Calculates address of 5th element of array
         la         $t0, var2         # $t0 gets address of var2
         sw         $t1, 0($t0)       # var 2 = address of 5th element of array 
-                                     # Note: we can store addresses to locations 
-                                     #   in memory just like we do with real data!
+     	                             #   in memory just like we do with real data!
         
         la         $t0, var3         # Get address of var 3
         lb         $s0, 0($t0)       # Get value of var3, sign-extended to 32 bits, to $s0
@@ -73,7 +74,7 @@ exit:
         # Usually data are declared before text. Try to follow that convention 
         #     in your other programs
         #  
-matric: .word 0    # This will be used by your submitted code
+matric: .word 2202    # This will be used by your submitted code
 
 mesg1:  .asciiz "Enter matriculation number: "
         # Data can have labels too, so we can refer to them
