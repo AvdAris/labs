@@ -3,7 +3,7 @@
 # for MYΥ-402 - Computer Architecture
 # Department of Computer Engineering, University of Ioannina
 # Aris Efthymiou
-
+#aristodimos avdeliodis 2202
         .globl main # declare the label main as global. 
         
         .text 
@@ -19,8 +19,38 @@ main:
 
         ########################################################################
         #  Write your code here
-        # NOTE: Don't print out the results! Automatic testing will get the final
         #  values of $s0, $s1 and check if they are correct
+        ###  xwris to loop douleuei swsta,allazwntas thn 29 se lw $t6,0($t5) gia to prwto ,lw $t6,4($t5) gia to deutero klp
+        li 	  $v1,0
+        li	  $t1,1
+loop:   
+	sll 	  $t5,$v1,2
+	add	  $t5,$a1,$t5
+	lw 	  $t6,0($t5)
+	addiu  	  $v1,$v1,1
+	
+	
+       slt	  $t0,$zero,$a0
+       beq	  $t0,$zero,negative
+       beq	  $t0,$t1,positive
+	
+        
+        ########################################################################
+negative:
+	 andi	  $t2,$t6,0x01
+         beq	  $t2,$zero,iseven
+         
+positive:
+ 	andi	  $t2,$t6,0x01
+        beq	  $t2,$t1,isodd
+iseven:
+	addu	  $s1,$s1,$t6
+        j	  pos
+isodd:
+       addu	  $s0,$s0,$t6  	
+        j	  pos
+pos:   
+       	bne	  $v1,$a0,loop
         ########################################################################
         
 exit: 
