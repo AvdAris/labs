@@ -10,7 +10,7 @@
 # 
 # -----------------------------------------------------------------------------
 
-import os, subprocess, re, ast, operator
+import os, subprocess, re, ast, operator, tempfile
 
 # Colours for pretty printing of messages!
 FAIL = '\033[91m'
@@ -214,14 +214,15 @@ def runMars(prog, expect_regs, expect_mem_in, \
     if match:
       ic = int(match.group(1))
 
+  if ic == MAX_INST:
+    asExpected = False
+    marsOutput = marsOutput + FAIL + \
+      "\nReached maximum number of executed instructions. Infinite loop in program?\n"+ENDC
   if verbose:
     marsOutput = marsOutput + "---- Expected results ---- \nRegisters:\n" + \
                  "\n".join(["%s -> %s" % (k,v) for (k,v) in out_reg.items()]) + \
                  "\nMemory:\n" + \
                  "\n".join(["%s -> %s" % (k,v) for (k,v) in out_mem.items()])
-    if ic == MAX_INST:
-      marsOutput = marsOutput + FAIL + \
-        "\nReached maximum number of executed instructions. Infinite loop in program?"+ENDC
   if asExpected:
     return (0, ic, marsOutput)
   else:
@@ -285,16 +286,34 @@ def runTests(prog, tests, \
     input_changes = test[1]   # get the sed replacement commands
     expect_regs = test[2]
     expect_mem = test[3]
-    # Assemble the sed command:
-    c = 'sed -b -i_b%d' % (idx)
-    for i in input_changes:
-      c += ' -e "%s"' %(i)
-    c += ' ' + prog
-    # Run sed to modify input
-    if input_changes:
-      os.system(c)
+    # ------------
+    modFile = tempfile.NamedTemporaryFile(mode='w+',suffix=".asm",delete=False)
+    # Do not delete. Windows requires tempFile 2b closed b4 Mars opens it for execution
+    with open (prog, 'r') as origFile:
+      for line in origFile:
+        new = line
+        for i in input_changes:
+          if re.match(i[0], line):
+              new = re.sub(i[0], i[1], line)
+              break
+        modFile.write(new)
+      modFile.close()
     # RunMars
-    (s, ic, m) = runMars(prog, expect_regs, expect_mem, marsJar, True)
+    (s, ic, m) = runMars(modFile.name, expect_regs, expect_mem, marsJar, True)
+    # Delete temp
+    os.unlink(modFile.name)
+    # ----- Old code ----
+    # Assemble the sed command:
+    #c = 'sed -b -i_b%d' % (idx)
+    #for i in input_changes:
+    #  c += ' -e "%s"' %(i)
+    #c += ' ' + prog
+    ## Run sed to modify input
+    #if input_changes:
+    #  os.system(c)
+    ## RunMars
+    #(s, ic, m) = runMars(prog, expect_regs, expect_mem, marsJar, True)
+
     if s == 0:
       out += "\n------------------------------\nPASSED %s" % (test_name)
       out += "\nExecuted %d instructions\n" %(ic)

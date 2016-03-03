@@ -16,14 +16,14 @@ else:
 
 tests = [ \
  ("Minimal", \
-  ["s/^rows:.*$/rows: .word 1/", "s/^cols:.*$/cols: .word 1/", "s/^picture:.*$/picture: .word 0x01/"],\
+  [("^rows:.*$","rows: .word 1"), ("^cols:.*$","cols: .word 1"), ("^picture:.*$","picture: .word 0x01")],\
   {}, \
   {'r_clues' : 1, 'c_clues' : 1} \
  ), \
  ("Man and dog",\
-  ["s/^rows:.*$/rows: .word 30/", \
-   "s/^cols:.*$/cols: .word 25/",\
-   "s/^picture:.*$/picture: .word 0x000007c, 0x00000fe, 0x00000fe, 0x000005e, 0x00000fe, 0x000007e, 0x000003c, 0x0000018, 0x0001ffc, 0x0003ffe, 0x000303f, 0x000143f, 0x0001c3f, 0x000083f, 0x000083f, 0x008083f, 0x00f081f, 0x00d9c1f, 0x00f943f, 0x18f007e, 0x11e00fc, 0x13f01ec, 0x1ff81ff, 0x0ff81ff, 0x0fcc003, 0x070000d, 0x060000c, 0x060000c, 0x060000c, 0x030001c/"\
+  [("^rows:.*$","rows: .word 30"), \
+   ("^cols:.*$","cols: .word 25"),\
+   ("^picture:.*$","picture: .word 0x000007c, 0x00000fe, 0x00000fe, 0x000005e, 0x00000fe, 0x000007e, 0x000003c, 0x0000018, 0x0001ffc, 0x0003ffe, 0x000303f, 0x000143f, 0x0001c3f, 0x000083f, 0x000083f, 0x008083f, 0x00f081f, 0x00d9c1f, 0x00f943f, 0x18f007e, 0x11e00fc, 0x13f01ec, 0x1ff81ff, 0x0ff81ff, 0x0fcc003, 0x070000d, 0x060000c, 0x060000c, 0x060000c, 0x030001c")\
   ],
   {},\
   {'r_clues' : 5, \
@@ -83,9 +83,9 @@ tests = [ \
    'c_clues+24*64' : 9, 'c_clues+24*64+4' :  4 } \
  ), \
  ("Moose", \
-  ["s/^rows:.*$/rows: .word 14/", \
-   "s/^cols:.*$/cols: .word 16/", \
-   "s/^picture:.*$/picture: .word 0x0d81b, 0x0da5b, 0x07a5b, 0x03e3e, 0x00df0, 0x003f8, 0x0057c, 0x00ffe, 0x01ffe, 0x03fff, 0x07fbf, 0x05c3f, 0x07c3f, 0x383f/" \
+  [("^rows:.*$", "rows: .word 14"), \
+   ("^cols:.*$", "cols: .word 16"), \
+   ("^picture:.*$", "picture: .word 0x0d81b, 0x0da5b, 0x07a5b, 0x03e3e, 0x00df0, 0x003f8, 0x0057c, 0x00ffe, 0x01ffe, 0x03fff, 0x07fbf, 0x05c3f, 0x07c3f, 0x383f") \
   ], \
   {}, \
   {'r_clues' : 2, 'r_clues+4' : 2, 'r_clues+8' : 2, 'r_clues+12' : 2, \
