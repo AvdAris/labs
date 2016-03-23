@@ -8,20 +8,52 @@
         .text 
 mult:
         # ---------------------------------------------------------------------
-        # Write your mult subroutine here. Follow standard MIPS conventions
-        #  on register use.
+	
+	add $t1,$t1,$s1
+	addiu $t0,$t0,1
+	bne $t0 ,$a1, mult
+        add $s0,$t1,$zero
+        li $t1,0
+        li $t0,0
         # ---------------------------------------------------------------------
+       
         jr    $ra # return
 
 
 listProd:
         # ---------------------------------------------------------------------
-        # Write your listProd subroutine here. Follow standard MIPS conventions
-        #  on register use.
+    	add $t2,$zero,$ra
+      	lw   $t3,0($a0)								
+      	lw   $t4,4($a0)  					
+      	lw   $t4,0($t4)
+      	add  $s1,$zero,$t3
+      	add  $a1,$zero,$t4
+      	jal mult  
+      	lw   $t5,8($a0)
+      	add  $s1,$zero,$s0
+      	add  $a1,$zero,$t5
+      	jal mult  
+      	lw   $t6,12($a0)
+      	lw   $t6,0($t6)
+      	add  $s1,$zero,$s0
+      	add  $a1,$zero,$t6
+      	jal mult
+     #   addi $sp,$sp,-20
+     #  sw   $t3,0($sp)
+     #  sw   $t4,4($sp)
+     #  sw   $t5,8($sp)
+     #  sw   $t6,12($sp)
+     #  sw   $t7,16($sp)
+     #  lw   $a0,4($a0)
+     #  sw   $a0,4($sp)
+       
+        
+       
+       
         # ---------------------------------------------------------------------
-        jr    $ra
+        jr    $t2
 
-
+	
         ########################################################################
         #  Write your code above. Leave main as is.
         ########################################################################
@@ -29,22 +61,25 @@ main:
         # These are for providing input and testing, don't change this in your
         #  final submission
         # ----- Try it with the full list
+        
         la    $a0, n1_d
+        
         jal   listProd
         addu  $s0, $v0, $zero   # Move the result to s0 for tester to check
+       
         # ----- Try it with a null pointer
-        addu  $a0, $zero, $zero
-        jal   listProd
-        addu  $s1, $v0, $zero   # Move the result to s1 for tester to check
+        #addu  $a0, $zero, $zero
+        #jal   listProd
+        #addu  $s1, $v0, $zero   # Move the result to s1 for tester to check
         # ----- Try it with 1 item list
-        la    $a0, n5_d
-        jal   listProd
-        addu  $s2, $v0, $zero   # Move the result to s2 for tester to check
+       # la    $a0, n5_d
+       # jal   listProd
+       # addu  $s2, $v0, $zero   # Move the result to s2 for tester to check
         # ----- Try mult by 0
-        la    $a0, na_d
-        jal   listProd
-        addu  $s3, $v0, $zero   # Move the result to s3 for tester to check
-
+        #la    $a0, na_d
+       # jal   listProd
+        #addu  $s3, $v0, $zero   # Move the result to s3 for tester to check
+	
         addiu      $v0, $zero, 10    # system service 10 is exit
         syscall                      # we are outta here.
 
